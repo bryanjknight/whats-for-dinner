@@ -70,7 +70,7 @@ line-ending = "auto"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
-addopts = "--cov=app --cov-report=term-local --strict-markers"
+addopts = "--cov=app --cov-report=term-missing --strict-markers"
 markers = [
     "unit: unit tests",
     "integration: integration tests",
