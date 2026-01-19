@@ -78,6 +78,11 @@ class Recipe:
     source_url: Optional[str] = None
     rating: Optional[float] = None
 
+    def __post_init__(self) -> None:
+        """Validate recipe data."""
+        if self.servings < 1:
+            raise ValueError(f"Servings must be at least 1, got {self.servings}")
+
     @property
     def total_time_minutes(self) -> int:
         """Calculate total time (prep + cook).
@@ -97,10 +102,13 @@ class Recipe:
             New Recipe with scaled ingredients
 
         Raises:
-            ValueError: If new_servings is less than 1
+            ValueError: If new_servings is less than 1 or if self.servings is 0
         """
         if new_servings < 1:
             raise ValueError(f"Servings must be at least 1, got {new_servings}")
+
+        if self.servings == 0:
+            raise ValueError("Cannot scale recipe with 0 servings")
 
         if new_servings == self.servings:
             return self

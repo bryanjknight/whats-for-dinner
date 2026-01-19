@@ -4,6 +4,6 @@
   "pythonPlatform": "Darwin",
   "typeCheckingMode": "standard",
   "extraPaths": ["backend"],
-  "venvPath": "backend",
+  "venvPath": ".",
   "venv": ".venv"
 }

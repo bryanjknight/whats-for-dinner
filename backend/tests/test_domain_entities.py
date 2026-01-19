@@ -4,7 +4,7 @@ These tests verify entity behavior with zero external dependencies.
 """
 
 import pytest
-from datetime import date, timedelta
+from datetime import date
 
 from app.domain.entities import (
     Feedback,

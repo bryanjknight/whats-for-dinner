@@ -56,9 +56,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Type Check (Mypy)",
+      "label": "Type Check (Pyright)",
       "type": "shell",
-      "command": "cd ${workspaceFolder}/backend && mypy app",
+      "command": "cd ${workspaceFolder} && pyright backend/app",
       "group": "none",
       "problemMatcher": []
     }
