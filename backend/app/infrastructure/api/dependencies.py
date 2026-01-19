@@ -2,9 +2,7 @@
 
 from functools import lru_cache
 
-from fastapi import Depends
-
-from app.config import Settings, get_settings
+from app.config import get_settings
 from app.domain.interfaces.feedback_repository import IFeedbackRepository
 from app.domain.interfaces.grocery_list_repository import IGroceryListRepository
 from app.domain.interfaces.meal_plan_repository import IMealPlanRepository
@@ -20,71 +18,55 @@ from app.infrastructure.persistence.dynamodb import (
 
 
 @lru_cache(maxsize=1)
-def get_recipe_repository(settings: Settings = Depends(get_settings)) -> IRecipeRepository:
+def get_recipe_repository() -> IRecipeRepository:
     """Get the recipe repository implementation.
-
-    Args:
-        settings: Application configuration
 
     Returns:
         Recipe repository instance
     """
+    settings = get_settings()
     return DynamoDBRecipeRepository(settings)
 
 
 @lru_cache(maxsize=1)
-def get_user_repository(settings: Settings = Depends(get_settings)) -> IUserRepository:
+def get_user_repository() -> IUserRepository:
     """Get the user repository implementation.
-
-    Args:
-        settings: Application configuration
 
     Returns:
         User repository instance
     """
+    settings = get_settings()
     return DynamoDBUserRepository(settings)
 
 
 @lru_cache(maxsize=1)
-def get_meal_plan_repository(
-    settings: Settings = Depends(get_settings),
-) -> IMealPlanRepository:
+def get_meal_plan_repository() -> IMealPlanRepository:
     """Get the meal plan repository implementation.
-
-    Args:
-        settings: Application configuration
 
     Returns:
         Meal plan repository instance
     """
+    settings = get_settings()
     return DynamoDBMealPlanRepository(settings)
 
 
 @lru_cache(maxsize=1)
-def get_feedback_repository(
-    settings: Settings = Depends(get_settings),
-) -> IFeedbackRepository:
+def get_feedback_repository() -> IFeedbackRepository:
     """Get the feedback repository implementation.
-
-    Args:
-        settings: Application configuration
 
     Returns:
         Feedback repository instance
     """
+    settings = get_settings()
     return DynamoDBFeedbackRepository(settings)
 
 
 @lru_cache(maxsize=1)
-def get_grocery_list_repository(
-    settings: Settings = Depends(get_settings),
-) -> IGroceryListRepository:
+def get_grocery_list_repository() -> IGroceryListRepository:
     """Get the grocery list repository implementation.
-
-    Args:
-        settings: Application configuration
 
     Returns:
         Grocery list repository instance
     """
+    settings = get_settings()
     return DynamoDBGroceryListRepository(settings)

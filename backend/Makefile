@@ -1,4 +1,4 @@
-.PHONY: help install install-dev build validate test test-cov test-fast test-unit test-integration test-watch lint format check-format type-check clean all ci dev info docker-up docker-down docker-logs docker-init seed-db reset-db
+.PHONY: help install install-dev build validate test test-cov test-fast test-unit test-integration test-watch lint format check-format type-check clean all ci dev info docker-up docker-down docker-logs docker-wait docker-init seed-db reset-db
 
 PYTHON := python3
 VENV := ../.venv
@@ -90,6 +90,7 @@ docker-logs: ## Show logs from all services
 
 docker-init: ## Initialize DynamoDB tables
 	@echo "$(BOLD)Initializing DynamoDB tables...$(NC)"
+	bash scripts/wait-for-localstack.sh
 	$(PYTHON) scripts/init_dynamodb.py
 	@echo "$(GREEN)✓ DynamoDB tables initialized$(NC)"
 
