@@ -53,7 +53,7 @@ A local-first, AI-powered meal planning application that generates personalized 
          │                    │                    │
          ▼                    ▼                    ▼
 ┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   SQLite    │      │   Chroma    │      │   Ollama    │
+│   Dynamo    │      │   Milvus    │      │   Ollama    │
 │  (app data) │      │ (vectors)   │      │   (LLM)     │
 └─────────────┘      └─────────────┘      └─────────────┘
 ```
@@ -67,9 +67,9 @@ A local-first, AI-powered meal planning application that generates personalized 
 | LLM | Ollama (qwen2.5:14b or llama3.1:8b) | Amazon Bedrock (Claude) or Lambda + Anthropic API |
 | Embeddings | nomic-embed-text via Ollama | Amazon Bedrock (Titan Embeddings) or Voyage API |
 | Vector Store | Milvus (local via Docker) | Zilliz Cloud (free tier: 2 collections, 500K vectors) |
-| Database | SQLite + SQLAlchemy | DynamoDB (on-demand) or Aurora Serverless v2 |
+| Database | DynamoDB Local (via Docker) | DynamoDB (on-demand) |
 | Auth | None (single user local) | Cognito (optional, for multi-user) |
-| Infrastructure | Docker Compose (optional) | Terraform |
+| Infrastructure | Docker Compose | Terraform |
 
 **Why this AWS stack:**
 - **Lambda + API Gateway**: Pay-per-request, ~$0 at low traffic, scales automatically
@@ -80,9 +80,72 @@ A local-first, AI-powered meal planning application that generates personalized 
 
 ---
 
+## Configuration Management
+
+The application uses environment-based configuration via `pydantic-settings` to support local development and production deployments without code changes.
+
+### Configuration Files
+
+- **`backend/app/config.py`** - Settings class with environment validation
+- **`backend/.env`** - Local environment variables (not committed)
+- **`backend/.env.example`** - Template showing all available configuration options
+
+### Environment Switching Strategy
+
+All infrastructure decisions are made based on environment variables, enabling seamless transitions between local and cloud deployments:
+
+```
+Local Development                    Production AWS
+├─ DATABASE_URL                      ├─ DATABASE_URL (DynamoDB)
+│  └─ dynamodb://localhost:8000      └─ dynamodb://meal_planner
+├─ VECTOR_STORE_TYPE                ├─ VECTOR_STORE_TYPE (zilliz)
+│  ├─ milvus                         ├─ ZILLIZ_API_KEY
+│  ├─ MILVUS_HOST (localhost)        └─ ZILLIZ_URI
+│  └─ MILVUS_PORT (19530)
+├─ LLM_PROVIDER                      ├─ LLM_PROVIDER (bedrock)
+│  ├─ ollama                         ├─ BEDROCK_MODEL_ID
+│  └─ OLLAMA_BASE_URL                └─ BEDROCK_REGION
+└─ EMBEDDING_PROVIDER               └─ EMBEDDING_PROVIDER (bedrock)
+   ├─ ollama                            └─ BEDROCK_EMBED_MODEL_ID
+   └─ OLLAMA_EMBED_MODEL
+```
+
+### Configuration Loading Order
+
+1. Environment variables from `.env` file (if present)
+2. System environment variables (override .env)
+3. Defaults from `app/config.py` Settings class
+4. Validation with pydantic ensures type safety and required fields
+
+### Key Design Decisions
+
+**Centralized Configuration**
+- Single source of truth for all external service settings
+- No hardcoded connection strings or API endpoints
+- Easy to audit and change without code modifications
+
+**Optional Production Fields**
+- Local development doesn't require Bedrock/Zilliz credentials
+- Production settings validated only when needed
+- Reduces configuration burden for development workflow
+
+**Property Helpers**
+- `settings.is_local` and `settings.is_production` for conditional logic
+- Dependency injection factories use these to select implementations
+- Cleaner than string comparisons scattered throughout code
+
+**Unified Database Layer (DynamoDB Local)**
+- Local development uses DynamoDB Local (via Docker) instead of SQLite
+- Eliminates behavioral differences between local and production databases
+- Repository implementations work identically in both environments
+- Simplifies testing and reduces "works locally but fails in production" scenarios
+- All repository code targets DynamoDB API from day one
+
+---
+
 ## Data Models
 
-### SQLite Schema
+### DynamoDB Tables
 
 ```sql
 -- User preferences and restrictions
@@ -114,7 +177,7 @@ CREATE TABLE recipe (
     tags TEXT,  -- JSON array: ["vegetarian", "one-pot", "meal-prep"]
     source_url TEXT,
     source_name TEXT,
-    embedding_id TEXT,  -- reference to Chroma document ID
+    embedding_id TEXT,  -- reference to Milvus vector ID
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

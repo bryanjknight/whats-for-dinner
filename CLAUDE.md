@@ -198,6 +198,79 @@ Benefits:
 - Works consistently across different execution contexts
 - No confusion about relative path depth
 
+### Configuration Management
+
+Application configuration is centralized in `app/config.py` using `pydantic-settings` for environment-based management.
+
+**Configuration File Location**: `app/config.py`
+
+**Environment Variables File**: `.env` (local development, not committed to git)
+
+**Example File**: `.env.example` (committed, shows all available options)
+
+**Settings Features**:
+- Loads from `.env` file in backend root directory
+- Supports local, development, and production environments
+- Type-safe configuration with validation
+- Optional fields for production-only settings (Bedrock, Zilliz)
+- Boolean and integer parsing from environment variables
+
+**Usage in Application**:
+```python
+# In FastAPI routes or services
+from app.config import Settings, get_settings
+
+# As FastAPI dependency
+from fastapi import Depends
+
+def some_route(settings: Settings = Depends(get_settings)) -> dict:
+    if settings.is_production:
+        # Use production implementations
+        pass
+    else:
+        # Use local implementations
+        pass
+```
+
+**Environment Configuration for Local Development**:
+```bash
+ENVIRONMENT=local
+DEBUG=true
+DATABASE_URL=sqlite:///./meal_planner.db
+VECTOR_STORE_TYPE=milvus
+MILVUS_HOST=localhost
+MILVUS_PORT=19530
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+EMBEDDING_PROVIDER=ollama
+```
+
+**Environment Configuration for Production**:
+```bash
+ENVIRONMENT=production
+DEBUG=false
+DATABASE_URL=dynamodb://meal_planner
+VECTOR_STORE_TYPE=zilliz
+ZILLIZ_API_KEY=your-api-key
+ZILLIZ_URI=https://your-cluster.zilliz.com
+LLM_PROVIDER=bedrock
+BEDROCK_MODEL_ID=anthropic.claude-3-sonnet-20240229-v1:0
+BEDROCK_REGION=us-east-1
+EMBEDDING_PROVIDER=bedrock
+BEDROCK_EMBED_MODEL_ID=amazon.titan-embed-text-v2:0
+```
+
+**Supported Providers**:
+- **Database**: SQLite (local) → DynamoDB (production)
+- **Vector Store**: Milvus (local) → Zilliz Cloud (production)
+- **LLM**: Ollama (local) → Bedrock (production)
+- **Embeddings**: Ollama (local) → Bedrock (production)
+
+**Configuration Properties**:
+- `settings.is_local` - Check if running in local environment
+- `settings.is_production` - Check if running in production environment
+- Use these for conditional logic and DI decisions
+
 ### Use Case Pattern
 
 Every use case follows this structure:
@@ -274,7 +347,7 @@ Use FastAPI's dependency injection for wiring:
 # app/infrastructure/api/dependencies.py
 @lru_cache()
 def get_llm_service(settings: Settings = Depends(get_settings)) -> ILLMService:
-    if settings.environment == "production":
+    if settings.is_production:
         return BedrockLLMService(...)
     return OllamaLLMService(...)
 
