@@ -91,7 +91,7 @@ class MealPlan:
         Returns:
             List of unique recipe IDs
         """
-        return list(set(meal.recipe_id for meal in self.meals))
+        return list({meal.recipe_id for meal in self.meals})
 
     def swap_meal(self, meal_date: date, new_recipe_id: str, new_servings: int) -> bool:
         """Swap a meal in the plan with a new recipe.
