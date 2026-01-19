@@ -109,9 +109,7 @@ class DynamoDBMealPlanRepository(IMealPlanRepository):
             handle_dynamodb_error(e, "MealPlan")
             return None  # Unreachable, but satisfies type checker
 
-    def get_by_user_and_week(
-        self, user_id: str, week_start_date: date
-    ) -> Optional[MealPlan]:
+    def get_by_user_and_week(self, user_id: str, week_start_date: date) -> Optional[MealPlan]:
         """Retrieve a meal plan for a specific user and week.
 
         Args:

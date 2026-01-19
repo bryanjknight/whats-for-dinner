@@ -189,14 +189,10 @@ class UserProfileMapper:
                 "cuisine_preferences": user.cuisine_preferences,
                 "skill_level": user.skill_level,
                 "max_prep_time_minutes": (
-                    Decimal(str(user.max_prep_time_minutes))
-                    if user.max_prep_time_minutes
-                    else None
+                    Decimal(str(user.max_prep_time_minutes)) if user.max_prep_time_minutes else None
                 ),
                 "max_cook_time_minutes": (
-                    Decimal(str(user.max_cook_time_minutes))
-                    if user.max_cook_time_minutes
-                    else None
+                    Decimal(str(user.max_cook_time_minutes)) if user.max_cook_time_minutes else None
                 ),
                 "avoid_protein_types": user.avoid_protein_types,
             },
@@ -225,14 +221,10 @@ class UserProfileMapper:
             cuisine_preferences=data.get("cuisine_preferences", []),
             skill_level=data.get("skill_level", "intermediate"),
             max_prep_time_minutes=(
-                int(data["max_prep_time_minutes"])
-                if data.get("max_prep_time_minutes")
-                else None
+                int(data["max_prep_time_minutes"]) if data.get("max_prep_time_minutes") else None
             ),
             max_cook_time_minutes=(
-                int(data["max_cook_time_minutes"])
-                if data.get("max_cook_time_minutes")
-                else None
+                int(data["max_cook_time_minutes"]) if data.get("max_cook_time_minutes") else None
             ),
             avoid_protein_types=data.get("avoid_protein_types", []),
         )
@@ -270,9 +262,7 @@ class MealPlanMapper:
             "Data": {
                 "id": meal_plan.id,
                 "user_id": meal_plan.user_id,
-                "week_start_date": DateTimeMapper.to_dynamodb_date(
-                    meal_plan.week_start_date
-                ),
+                "week_start_date": DateTimeMapper.to_dynamodb_date(meal_plan.week_start_date),
                 "meals": meals,
                 "is_active": meal_plan.is_active,
                 "created_at": DateTimeMapper.to_dynamodb_date(meal_plan.created_at),
@@ -307,9 +297,7 @@ class MealPlanMapper:
         return MealPlan(
             id=data.get("id", ""),
             user_id=data.get("user_id", ""),
-            week_start_date=DateTimeMapper.from_dynamodb_date(
-                data.get("week_start_date")
-            ),
+            week_start_date=DateTimeMapper.from_dynamodb_date(data.get("week_start_date")),
             meals=meals,
             is_active=data.get("is_active", True),
             created_at=DateTimeMapper.from_dynamodb_date(data.get("created_at")),
@@ -333,9 +321,7 @@ class FeedbackMapper:
             "PK": f"USER#{feedback.user_id}",
             "SK": f"FEEDBACK#{feedback.id}",
             "GSI1PK": f"RECIPE#{feedback.recipe_id}",
-            "GSI1SK": DateTimeMapper.to_dynamodb_datetime(
-                datetime.now()
-            ),  # For sorting by recency
+            "GSI1SK": DateTimeMapper.to_dynamodb_datetime(datetime.now()),  # For sorting by recency
             "EntityType": "Feedback",
             "Data": {
                 "id": feedback.id,
@@ -412,9 +398,7 @@ class GroceryListMapper:
                 "meal_plan_id": grocery_list.meal_plan_id,
                 "items": items,
                 "created_at": DateTimeMapper.to_dynamodb_date(grocery_list.created_at),
-                "week_start_date": DateTimeMapper.to_dynamodb_date(
-                    grocery_list.week_start_date
-                ),
+                "week_start_date": DateTimeMapper.to_dynamodb_date(grocery_list.week_start_date),
             },
             "CreatedAt": DateTimeMapper.to_dynamodb_datetime(datetime.now()),
             "UpdatedAt": DateTimeMapper.to_dynamodb_datetime(datetime.now()),
@@ -451,7 +435,5 @@ class GroceryListMapper:
             meal_plan_id=data.get("meal_plan_id", ""),
             items=items,
             created_at=DateTimeMapper.from_dynamodb_date(data.get("created_at")),
-            week_start_date=DateTimeMapper.from_dynamodb_date(
-                data.get("week_start_date")
-            ),
+            week_start_date=DateTimeMapper.from_dynamodb_date(data.get("week_start_date")),
         )

@@ -8,7 +8,6 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from ..entities.grocery_list import GroceryList
-from ..exceptions import RecipeError
 
 
 class IGroceryListRepository(ABC):
