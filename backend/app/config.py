@@ -1,6 +1,6 @@
 """Application configuration using pydantic-settings.
 
-Supports environment-based configuration for local development (SQLite, Milvus, Ollama)
+Supports environment-based configuration for local development (DynamoDB Local, Milvus, Ollama)
 and production deployments (DynamoDB, Zilliz, Bedrock).
 """
 

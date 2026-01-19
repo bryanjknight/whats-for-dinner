@@ -236,7 +236,7 @@ def some_route(settings: Settings = Depends(get_settings)) -> dict:
 ```bash
 ENVIRONMENT=local
 DEBUG=true
-DATABASE_URL=dynamodb://localhost:8000
+DATABASE_URL=sqlite:///./meal_planner.db
 VECTOR_STORE_TYPE=milvus
 MILVUS_HOST=localhost
 MILVUS_PORT=19530
@@ -261,7 +261,7 @@ BEDROCK_EMBED_MODEL_ID=amazon.titan-embed-text-v2:0
 ```
 
 **Supported Providers**:
-- **Database**: DynamoDB Local (local) → DynamoDB (production)
+- **Database**: SQLite (local) → DynamoDB (production)
 - **Vector Store**: Milvus (local) → Zilliz Cloud (production)
 - **LLM**: Ollama (local) → Bedrock (production)
 - **Embeddings**: Ollama (local) → Bedrock (production)
@@ -347,7 +347,7 @@ Use FastAPI's dependency injection for wiring:
 # app/infrastructure/api/dependencies.py
 @lru_cache()
 def get_llm_service(settings: Settings = Depends(get_settings)) -> ILLMService:
-    if settings.environment == "production":
+    if settings.is_production:
         return BedrockLLMService(...)
     return OllamaLLMService(...)
 
