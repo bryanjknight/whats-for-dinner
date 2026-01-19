@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Backend Server",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/backend && uvicorn app.main:app --reload --port 8000",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^(.*)?Uvicorn running on.*",
+          "endsPattern": "^(.*)?Application startup complete.*"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/backend && python -m pytest tests -v",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Tests with Coverage",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/backend && python -m pytest tests -v --cov=app --cov-report=html",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Format Code (Ruff)",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/backend && ruff format .",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint Code (Ruff)",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/backend && ruff check .",
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "Type Check (Pyright)",
+      "type": "shell",
+      "command": "cd ${workspaceFolder} && pyright backend/app",
+      "group": "none",
+      "problemMatcher": []
+    }
+  ]
+}
