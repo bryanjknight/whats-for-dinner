@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recipe Schema",
+  "description": "Schema for meal planner recipes",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "description",
+    "servings",
+    "prep_time_minutes",
+    "cook_time_minutes",
+    "ingredients",
+    "instructions",
+    "dietary_tags",
+    "cuisine",
+    "difficulty",
+    "protein_type"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique recipe identifier"
+    },
+    "title": {
+      "type": "string",
+      "description": "Recipe name",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the recipe",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "servings": {
+      "type": "integer",
+      "description": "Number of servings",
+      "minimum": 1,
+      "maximum": 20
+    },
+    "prep_time_minutes": {
+      "type": "integer",
+      "description": "Preparation time in minutes",
+      "minimum": 0,
+      "maximum": 480
+    },
+    "cook_time_minutes": {
+      "type": "integer",
+      "description": "Cooking time in minutes",
+      "minimum": 0,
+      "maximum": 480
+    },
+    "ingredients": {
+      "type": "array",
+      "description": "List of ingredients",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "quantity", "unit"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Ingredient name",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Ingredient quantity",
+            "minimum": 0.01
+          },
+          "unit": {
+            "type": "string",
+            "description": "Measurement unit (cup, tbsp, tsp, g, oz, lb, etc)",
+            "enum": [
+              "cup",
+              "tbsp",
+              "tsp",
+              "ml",
+              "l",
+              "g",
+              "kg",
+              "oz",
+              "lb",
+              "piece",
+              "clove",
+              "bunch",
+              "pinch",
+              "dash"
+            ]
+          },
+          "notes": {
+            "type": ["string", "null"],
+            "description": "Optional notes about the ingredient (e.g., 'diced', 'minced')"
+          }
+        }
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "description": "Step-by-step cooking instructions",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 500
+      }
+    },
+    "dietary_tags": {
+      "type": "array",
+      "description": "Dietary restrictions/preferences this recipe is suitable for",
+      "items": {
+        "type": "string",
+        "enum": [
+          "vegetarian",
+          "vegan",
+          "gluten-free",
+          "dairy-free",
+          "nut-free",
+          "paleo",
+          "keto",
+          "low-carb",
+          "high-protein"
+        ]
+      }
+    },
+    "cuisine": {
+      "type": "string",
+      "description": "Type of cuisine",
+      "enum": [
+        "italian",
+        "asian",
+        "mexican",
+        "american",
+        "mediterranean",
+        "indian",
+        "thai",
+        "chinese",
+        "japanese",
+        "french",
+        "spanish",
+        "middle-eastern",
+        "korean"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "description": "Cooking difficulty level",
+      "enum": ["easy", "intermediate", "advanced"]
+    },
+    "protein_type": {
+      "type": "string",
+      "description": "Primary protein in the recipe",
+      "enum": [
+        "chicken",
+        "beef",
+        "pork",
+        "fish",
+        "shrimp",
+        "tofu",
+        "legumes",
+        "nuts",
+        "dairy",
+        "eggs",
+        "vegetarian"
+      ]
+    },
+    "image_url": {
+      "type": ["string", "null"],
+      "description": "URL to recipe image"
+    },
+    "source_url": {
+      "type": ["string", "null"],
+      "description": "Original source URL of the recipe"
+    },
+    "rating": {
+      "type": ["number", "null"],
+      "description": "Recipe rating (0-5)",
+      "minimum": 0,
+      "maximum": 5
+    }
+  }
+}
