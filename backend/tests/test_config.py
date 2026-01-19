@@ -17,7 +17,7 @@ class TestSettingsDefaults:
         settings = Settings()
         assert settings.environment == "local"
         assert settings.debug is False
-        assert settings.database_url == "dynamodb://localhost:8000"
+        assert settings.database_url == "dynamodb://localhost:4566"
 
     def test_vector_store_defaults(self) -> None:
         """Test vector store configuration defaults."""
@@ -122,7 +122,7 @@ class TestSettingsDotEnvFile:
                 """\
 ENVIRONMENT=development
 DEBUG=true
-DATABASE_URL=dynamodb://localhost:8000
+DATABASE_URL=dynamodb://localhost:4566
 VECTOR_STORE_TYPE=milvus
 MILVUS_HOST=milvus-server
 MILVUS_PORT=19530
@@ -137,7 +137,7 @@ OLLAMA_BASE_URL=http://ollama:11434
             settings = Settings()
             assert settings.environment == "development"
             assert settings.debug is True
-            assert settings.database_url == "dynamodb://localhost:8000"
+            assert settings.database_url == "dynamodb://localhost:4566"
             assert settings.milvus_host == "milvus-server"
 
     def test_env_file_with_none_values(self, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -240,7 +240,7 @@ class TestProductionConfiguration:
         """Test a complete local development configuration."""
         monkeypatch.setenv("ENVIRONMENT", "local")
         monkeypatch.setenv("DEBUG", "true")
-        monkeypatch.setenv("DATABASE_URL", "dynamodb://localhost:8000")
+        monkeypatch.setenv("DATABASE_URL", "dynamodb://localhost:4566")
         monkeypatch.setenv("VECTOR_STORE_TYPE", "milvus")
         monkeypatch.setenv("MILVUS_HOST", "localhost")
         monkeypatch.setenv("MILVUS_PORT", "19530")
@@ -251,7 +251,7 @@ class TestProductionConfiguration:
 
         settings = Settings()
         assert settings.is_local
-        assert settings.database_url == "dynamodb://localhost:8000"
+        assert settings.database_url == "dynamodb://localhost:4566"
         assert settings.vector_store_type == "milvus"
         assert settings.llm_provider == "ollama"
         assert settings.embedding_provider == "ollama"

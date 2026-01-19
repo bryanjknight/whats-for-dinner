@@ -1,11 +1,13 @@
 """DynamoDB client factory and utilities."""
 
+from typing import Any
+
 import boto3
 
 from app.config import Settings
 
 
-def get_dynamodb_client(settings: Settings) -> boto3.client:  # type: ignore
+def get_dynamodb_client(settings: Settings) -> Any:
     """Get a DynamoDB client configured for the current environment.
 
     Args:
@@ -28,7 +30,7 @@ def get_dynamodb_client(settings: Settings) -> boto3.client:  # type: ignore
     return boto3.client(**client_kwargs)
 
 
-def get_dynamodb_resource(settings: Settings) -> boto3.resource:  # type: ignore
+def get_dynamodb_resource(settings: Settings) -> Any:
     """Get a DynamoDB resource configured for the current environment.
 
     Args:
