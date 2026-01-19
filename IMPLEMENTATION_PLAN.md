@@ -8,14 +8,14 @@ This document outlines the implementation plan broken down into Linear-compatibl
 **Goal**: Establish project structure with clean architecture
 
 #### Backend Setup
-- [ ] **WFD-1**: Initialize backend project structure
+- [x] **WFD-1**: Initialize backend project structure
   - Create `backend/app/domain`, `application`, `infrastructure` directories
   - Set up `pyproject.toml` with dependencies (FastAPI, SQLAlchemy, Pydantic, pytest)
   - Configure `ruff` for linting and formatting
   - Add `.gitignore` for Python
   - **Tests**: Directory structure exists, imports work
 
-- [ ] **WFD-2**: Create domain entities
+- [x] **WFD-2**: Create domain entities
   - Implement `Recipe` entity with `Ingredient` dataclass
   - Implement `UserProfile` entity with dietary preferences
   - Implement `MealPlan` entity with `MealSlot`

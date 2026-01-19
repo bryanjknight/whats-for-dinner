@@ -1,0 +1,9 @@
+{
+  "include": ["backend"],
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Darwin",
+  "typeCheckingMode": "standard",
+  "extraPaths": ["backend"],
+  "venvPath": "backend",
+  "venv": ".venv"
+}
