@@ -40,3 +40,33 @@ class VectorStoreError(DomainException):
     """Raised when vector store operations fail."""
 
     pass
+
+
+class UserError(DomainException):
+    """Raised when user-related operations fail."""
+
+    pass
+
+
+class RecipeError(DomainException):
+    """Raised when recipe-related operations fail."""
+
+    pass
+
+
+class MealPlanError(DomainException):
+    """Raised when meal plan-related operations fail."""
+
+    pass
+
+
+class LLMError(DomainException):
+    """Raised when LLM service operations fail."""
+
+    pass
+
+
+class EmbeddingError(DomainException):
+    """Raised when embedding service operations fail."""
+
+    pass

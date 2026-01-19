@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from ..entities.user_profile import UserProfile
+from ..exceptions import UserError
 
 
 class IUserRepository(ABC):

@@ -1,4 +1,4 @@
-.PHONY: help install install-dev build validate test test-cov lint format check-format type-check clean all
+.PHONY: help install install-dev build validate test test-cov test-fast test-unit test-integration test-watch lint format check-format type-check clean all ci dev info
 
 PYTHON := python3
 VENV := ../.venv
@@ -103,7 +103,7 @@ clean: ## Clean build artifacts and cache
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name .mypy_cache -exec rm -rf {} + 2>/dev/null || true
-	find . -type d -name *.egg-info -exec rm -rf {} + 2>/dev/null || true
+	find . -type d -name "*.egg-info" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name .coverage -delete 2>/dev/null || true
 	find . -type d -name htmlcov -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true

@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from ..entities.recipe import Recipe
+from ..exceptions import RecipeError
 
 
 class IRecipeRepository(ABC):

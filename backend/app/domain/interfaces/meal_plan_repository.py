@@ -9,6 +9,7 @@ from datetime import date
 from typing import Optional
 
 from ..entities.meal_plan import MealPlan
+from ..exceptions import MealPlanError
 
 
 class IMealPlanRepository(ABC):

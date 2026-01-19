@@ -6,6 +6,8 @@ Any implementation (Ollama, Bedrock, OpenAI, etc.) must follow this interface.
 
 from abc import ABC, abstractmethod
 
+from ..exceptions import LLMError
+
 
 class ILLMService(ABC):
     """Abstract interface for large language model interactions."""
