@@ -68,9 +68,7 @@ class UserProfile:
             True if user dislikes this ingredient
         """
         ingredient_lower = ingredient_name.lower()
-        return any(
-            ingredient_lower in disliked.lower() for disliked in self.disliked_ingredients
-        )
+        return any(ingredient_lower in disliked.lower() for disliked in self.disliked_ingredients)
 
     def avoids_protein(self, protein_type: str) -> bool:
         """Check if user avoids a specific protein type.

@@ -177,6 +177,27 @@ class Recipe(Base):  # BAD - infrastructure leak
     __tablename__ = "recipes"
 ```
 
+### Import Paths
+
+**Always use absolute imports from the app root, never relative imports**:
+
+```python
+# ✓ GOOD - Absolute imports
+from app.domain.entities.recipe import Recipe
+from app.domain.interfaces.recipe_repository import IRecipeRepository
+from app.application.use_cases.generate_meal_plan import GenerateMealPlanUseCase
+
+# ✗ BAD - Relative imports
+from ...domain.entities.recipe import Recipe
+from ..interfaces.recipe_repository import IRecipeRepository
+```
+
+Benefits:
+- Clearer code intent
+- Easier IDE navigation and refactoring
+- Works consistently across different execution contexts
+- No confusion about relative path depth
+
 ### Use Case Pattern
 
 Every use case follows this structure:
@@ -184,8 +205,10 @@ Every use case follows this structure:
 ```python
 # app/application/use_cases/generate_meal_plan.py
 from dataclasses import dataclass
-from ...domain.interfaces.recipe_repository import IRecipeRepository
-from ...domain.interfaces.llm_service import ILLMService
+
+from app.domain.entities.meal_plan import MealPlan
+from app.domain.interfaces.llm_service import ILLMService
+from app.domain.interfaces.recipe_repository import IRecipeRepository
 
 @dataclass
 class GenerateMealPlanRequest:
@@ -354,15 +377,57 @@ OLLAMA_EMBED_MODEL=nomic-embed-text
 
 ## Quality Standards
 
+### Build & Validation
+
+Use the Makefile in the `backend/` directory for all build and validation tasks:
+
+```bash
+# Navigate to backend directory
+cd backend
+
+# Full CI pipeline (clean, install, validate, test)
+make all
+
+# Common development workflow
+make build validate test
+
+# Check before commit (format, lint, type-check, test)
+make format lint type-check test
+
+# Quick validation without testing
+make validate
+
+# Run tests with coverage report
+make test-cov
+
+# Show tool versions and paths
+make info
+```
+
+**Available make targets:**
+- `make help` - Show all available commands
+- `make install` - Install production dependencies
+- `make install-dev` - Install development dependencies
+- `make build` - Build and prepare project
+- `make validate` - Run linting + type checking
+- `make lint` - Check code style with ruff
+- `make format` - Auto-format code
+- `make type-check` - Run MyPy type checking
+- `make test` - Run all tests
+- `make test-cov` - Run tests with coverage report
+- `make clean` - Clean build artifacts
+- `make ci` - CI pipeline (for CI systems)
+
 ### Code Review Checklist
 
 Before committing:
+- [ ] Absolute imports only (no relative imports like `..domain`)
 - [ ] Domain layer has no infrastructure imports
 - [ ] All public methods have docstrings
 - [ ] Type hints on all function signatures
-- [ ] Tests pass (`pytest backend/tests`)
-- [ ] Linting passes (`ruff check backend`)
-- [ ] Formatting applied (`ruff format backend`)
+- [ ] `make validate` passes (linting + type-checking)
+- [ ] `make test` passes (all tests)
+- [ ] `make format` has been run (code is formatted)
 
 ### Recipe Quality Standards
 
