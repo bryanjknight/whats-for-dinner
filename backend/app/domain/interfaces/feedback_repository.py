@@ -8,7 +8,6 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from ..entities.feedback import Feedback
-from ..exceptions import RecipeError
 
 
 class IFeedbackRepository(ABC):
