@@ -3,8 +3,9 @@
 These tests verify entity behavior with zero external dependencies.
 """
 
-import pytest
 from datetime import date
+
+import pytest
 
 from app.domain.entities import (
     Feedback,
@@ -196,9 +197,7 @@ class TestMealSlot:
 
     def test_meal_slot_creation(self) -> None:
         """Test creating a meal slot."""
-        slot = MealSlot(
-            date=date(2024, 1, 15), recipe_id="recipe-1", servings=4, notes="Dinner"
-        )
+        slot = MealSlot(date=date(2024, 1, 15), recipe_id="recipe-1", servings=4, notes="Dinner")
         assert slot.date == date(2024, 1, 15)
         assert slot.servings == 4
         assert slot.notes == "Dinner"
@@ -523,24 +522,18 @@ class TestFeedback:
 
     def test_sentiment_score_highest(self) -> None:
         """Test sentiment score for best feedback."""
-        feedback = Feedback(
-            id="f1", user_id="u1", recipe_id="r1", rating=5, would_make_again=True
-        )
+        feedback = Feedback(id="f1", user_id="u1", recipe_id="r1", rating=5, would_make_again=True)
         # (5-3)/2 * 1.2 = 1.2, clamped to 1.0
         assert feedback.get_sentiment_score() == 1.0
 
     def test_sentiment_score_lowest(self) -> None:
         """Test sentiment score for worst feedback."""
-        feedback = Feedback(
-            id="f1", user_id="u1", recipe_id="r1", rating=1, would_make_again=False
-        )
+        feedback = Feedback(id="f1", user_id="u1", recipe_id="r1", rating=1, would_make_again=False)
         # (1-3)/2 * 0.8 = -0.8
         assert feedback.get_sentiment_score() == pytest.approx(-0.8, rel=0.01)
 
     def test_sentiment_score_neutral(self) -> None:
         """Test sentiment score for neutral feedback."""
-        feedback = Feedback(
-            id="f1", user_id="u1", recipe_id="r1", rating=3, would_make_again=True
-        )
+        feedback = Feedback(id="f1", user_id="u1", recipe_id="r1", rating=3, would_make_again=True)
         # (3-3)/2 * 1.2 = 0
         assert feedback.get_sentiment_score() == 0.0

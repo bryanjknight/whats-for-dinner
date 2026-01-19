@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/bin/mypy:*)",
+      "Bash(make ci:*)"
+    ]
+  }
+}

@@ -96,9 +96,7 @@ class GroceryList:
                 return
 
         # Create new item if not found
-        new_item = GroceryItem(
-            name=name, quantity=quantity, unit=unit, recipe_sources=[recipe_id]
-        )
+        new_item = GroceryItem(name=name, quantity=quantity, unit=unit, recipe_sources=[recipe_id])
         self.add_item(new_item)
 
     def get_items_by_category(self, category: str) -> list[GroceryItem]:
