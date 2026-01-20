@@ -16,8 +16,7 @@ def get_dynamodb_client(settings: Settings) -> Any:
     Returns:
         Configured boto3 DynamoDB client
     """
-    client_kwargs = {
-        "service_name": "dynamodb",
+    kwargs = {
         "region_name": settings.aws_region,
         "aws_access_key_id": settings.aws_access_key_id,
         "aws_secret_access_key": settings.aws_secret_access_key,
@@ -25,9 +24,10 @@ def get_dynamodb_client(settings: Settings) -> Any:
 
     # LocalStack requires endpoint_url for local development
     if settings.dynamodb_endpoint_url:
-        client_kwargs["endpoint_url"] = settings.dynamodb_endpoint_url
+        kwargs["endpoint_url"] = settings.dynamodb_endpoint_url
 
-    return boto3.client(**client_kwargs)
+    # boto3-stubs is overly strict about service_name parameter
+    return boto3.client("dynamodb", **kwargs)  # type: ignore[call-overload]
 
 
 def get_dynamodb_resource(settings: Settings) -> Any:
@@ -39,8 +39,7 @@ def get_dynamodb_resource(settings: Settings) -> Any:
     Returns:
         Configured boto3 DynamoDB resource
     """
-    resource_kwargs = {
-        "service_name": "dynamodb",
+    kwargs = {
         "region_name": settings.aws_region,
         "aws_access_key_id": settings.aws_access_key_id,
         "aws_secret_access_key": settings.aws_secret_access_key,
@@ -48,6 +47,7 @@ def get_dynamodb_resource(settings: Settings) -> Any:
 
     # LocalStack requires endpoint_url for local development
     if settings.dynamodb_endpoint_url:
-        resource_kwargs["endpoint_url"] = settings.dynamodb_endpoint_url
+        kwargs["endpoint_url"] = settings.dynamodb_endpoint_url
 
-    return boto3.resource(**resource_kwargs)
+    # boto3-stubs is overly strict about service_name parameter
+    return boto3.resource("dynamodb", **kwargs)  # type: ignore[call-overload]

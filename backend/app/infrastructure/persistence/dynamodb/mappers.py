@@ -284,20 +284,33 @@ class MealPlanMapper:
         data = item.get("Data", {})
         meals_data = data.get("meals", [])
 
-        meals = [
-            MealSlot(
-                date=DateTimeMapper.from_dynamodb_date(meal["date"]),
-                recipe_id=meal["recipe_id"],
-                servings=int(meal["servings"]),
-                notes=meal.get("notes"),
+        meals = []
+        for meal in meals_data:
+            meal_date = DateTimeMapper.from_dynamodb_date(meal["date"])
+            if meal_date is None:
+                raise ValueError(
+                    f"Meal date is required but was None for recipe: {meal.get('recipe_id')}"
+                )
+
+            meals.append(
+                MealSlot(
+                    date=meal_date,
+                    recipe_id=meal["recipe_id"],
+                    servings=int(meal["servings"]),
+                    notes=meal.get("notes"),
+                )
             )
-            for meal in meals_data
-        ]
+
+        week_start = DateTimeMapper.from_dynamodb_date(data.get("week_start_date"))
+        if week_start is None:
+            raise ValueError(
+                f"week_start_date is required but was None for meal plan: {data.get('id')}"
+            )
 
         return MealPlan(
             id=data.get("id", ""),
             user_id=data.get("user_id", ""),
-            week_start_date=DateTimeMapper.from_dynamodb_date(data.get("week_start_date")),
+            week_start_date=week_start,
             meals=meals,
             is_active=data.get("is_active", True),
             created_at=DateTimeMapper.from_dynamodb_date(data.get("created_at")),
