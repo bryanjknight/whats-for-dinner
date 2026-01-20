@@ -7,7 +7,6 @@ Any implementation (Milvus, Zilliz Cloud, Pinecone, etc.) must follow this inter
 from abc import ABC, abstractmethod
 
 from ..entities.recipe import Recipe
-from ..exceptions import VectorStoreError
 
 
 class IVectorStore(ABC):

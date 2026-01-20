@@ -6,8 +6,6 @@ Any implementation (Ollama, Bedrock, OpenAI, etc.) must follow this interface.
 
 from abc import ABC, abstractmethod
 
-from ..exceptions import EmbeddingError
-
 
 class IEmbeddingService(ABC):
     """Abstract interface for text embedding generation."""

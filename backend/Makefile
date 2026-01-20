@@ -1,4 +1,4 @@
-.PHONY: help install install-dev build validate test test-cov test-fast test-unit test-integration test-watch lint format check-format type-check clean all ci dev info
+.PHONY: help install install-dev build validate test test-cov test-fast test-unit test-integration test-watch lint format check-format type-check clean all ci dev info docker-up docker-down docker-logs docker-wait docker-init seed-db reset-db
 
 PYTHON := python3
 VENV := ../.venv
@@ -70,6 +70,37 @@ type-check: ## Run type checking with mypy
 	@echo "$(BOLD)Type checking with mypy...$(NC)"
 	mypy app --strict
 	@echo "$(GREEN)✓ Type checking passed$(NC)"
+
+# Docker targets
+docker-up: ## Start all services (LocalStack, Milvus, Ollama)
+	@echo "$(BOLD)Starting Docker services...$(NC)"
+	docker-compose up -d
+	@echo "$(GREEN)✓ Services started$(NC)"
+	@echo "  LocalStack (DynamoDB): http://localhost:4566"
+	@echo "  Milvus: localhost:19530"
+	@echo "  Ollama: http://localhost:11434"
+
+docker-down: ## Stop all services
+	@echo "$(BOLD)Stopping Docker services...$(NC)"
+	docker-compose down
+	@echo "$(GREEN)✓ Services stopped$(NC)"
+
+docker-logs: ## Show logs from all services
+	docker-compose logs -f
+
+docker-init: ## Initialize DynamoDB tables
+	@echo "$(BOLD)Initializing DynamoDB tables...$(NC)"
+	bash scripts/wait-for-localstack.sh
+	$(PYTHON) scripts/init_dynamodb.py
+	@echo "$(GREEN)✓ DynamoDB tables initialized$(NC)"
+
+seed-db: ## Seed database with sample recipes
+	@echo "$(BOLD)Seeding database with recipes...$(NC)"
+	$(PYTHON) scripts/seed_recipes.py
+	@echo "$(GREEN)✓ Database seeding complete$(NC)"
+
+reset-db: docker-down docker-up docker-init seed-db ## Reset database (clears and reseeds)
+	@echo "$(GREEN)✓ Database reset complete$(NC)"
 
 # Test targets
 test: ## Run tests

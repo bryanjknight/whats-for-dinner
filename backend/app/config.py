@@ -23,9 +23,16 @@ class Settings(BaseSettings):
     debug: bool = False
 
     # Database configuration
-    # Local: DynamoDB Local (via docker-compose)
+    # Local: DynamoDB Local via LocalStack (via docker-compose)
     # Production: DynamoDB
-    database_url: str = "dynamodb://localhost:8000"
+    database_url: str = "dynamodb://localhost:4566"
+
+    # AWS configuration
+    aws_region: str = "us-east-1"
+    aws_access_key_id: str = "test"  # LocalStack dummy credentials
+    aws_secret_access_key: str = "test"  # LocalStack dummy credentials
+    dynamodb_endpoint_url: str | None = None  # LocalStack: http://localhost:4566
+    dynamodb_table_name: str = "meal-planner"
 
     # Vector store configuration
     vector_store_type: Literal["milvus", "zilliz"] = "milvus"
